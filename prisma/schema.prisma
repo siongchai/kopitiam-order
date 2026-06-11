@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model GroupOrder {
+  id          String       @id
+  label       String
+  stallName   String?
+  organizerId String
+  createdAt   DateTime     @default(now())
+  closedAt    DateTime?
+  drinks      DrinkOrder[]
+}
+
+model DrinkOrder {
+  id          String     @id
+  groupId     String
+  personName  String
+  drinkName   String
+  base        String
+  milkType    String?
+  sweetness   String?
+  temperature String
+  notes       String?
+  createdAt   DateTime   @default(now())
+  group       GroupOrder @relation(fields: [groupId], references: [id])
+}
