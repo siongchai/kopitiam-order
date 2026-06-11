@@ -31,3 +31,10 @@ model DrinkOrder {
   createdAt   DateTime   @default(now())
   group       GroupOrder @relation(fields: [groupId], references: [id])
 }
+
+model Admin {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
