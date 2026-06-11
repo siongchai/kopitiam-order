@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
-  const cookies = request.cookies;
   const organizerIds: string[] = [];
 
-  for (const [name, cookie] of cookies) {
-    if (name.startsWith("organizer_")) {
+  request.cookies.getAll().forEach((cookie) => {
+    if (cookie.name.startsWith("organizer_")) {
       organizerIds.push(cookie.value);
     }
-  }
+  });
 
   if (organizerIds.length === 0) {
     return NextResponse.json([]);
