@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen bg-[#FEFCF9] antialiased touch-manipulation">
         <div className="safe-area-inset">{children}</div>
+        <SpeedInsights />
       </body>
     </html>
   );
