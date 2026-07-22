@@ -32,6 +32,7 @@ export default function DrinkBuilder({
   const [sweetness, setSweetness] = useState<SweetnessOption>("normal");
   const [temperature, setTemperature] = useState<TemperatureOption>("hot");
   const [notes, setNotes] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -49,21 +50,26 @@ export default function DrinkBuilder({
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/orders/${orderId}/drinks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          personName: personName.trim() || "Anonymous",
-          base,
-          milkType: baseInfo.hasMilkOption ? milkType : null,
-          sweetness,
-          temperature,
-          notes: notes.trim() || null,
-        }),
-      });
+      let allOk = true;
+      for (let i = 0; i < quantity; i++) {
+        const res = await fetch(`/api/orders/${orderId}/drinks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            personName: personName.trim() || "Anonymous",
+            base,
+            milkType: baseInfo.hasMilkOption ? milkType : null,
+            sweetness,
+            temperature,
+            notes: notes.trim() || null,
+          }),
+        });
+        if (!res.ok) { allOk = false; break; }
+      }
 
-      if (res.ok) {
+      if (allOk) {
         setNotes("");
+        setQuantity(1);
         setShowSuccess(true);
         onDrinkAdded();
         setTimeout(() => {
@@ -201,9 +207,33 @@ export default function DrinkBuilder({
         <p className="font-bold text-[#4A3425] text-xl">{previewName}</p>
       </div>
 
+      {/* Quantity */}
+      <div>
+        <label className="section-label">Quantity</label>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            disabled={disabled || quantity <= 1}
+            className="w-10 h-10 rounded-full bg-[#F5F0EB] text-[#6B4C35] font-bold text-lg hover:bg-[#EDE5DC] active:scale-95 transition-all disabled:opacity-30"
+          >
+            −
+          </button>
+          <span className="text-xl font-bold text-[#4A3425] w-8 text-center">{quantity}</span>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.min(10, q + 1))}
+            disabled={disabled || quantity >= 10}
+            className="w-10 h-10 rounded-full bg-[#F5F0EB] text-[#6B4C35] font-bold text-lg hover:bg-[#EDE5DC] active:scale-95 transition-all disabled:opacity-30"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
       {/* Submit */}
       <button type="submit" disabled={disabled || submitting} className="btn-primary">
-        {showSuccess ? "Added!" : submitting ? "Adding..." : "Add to Order"}
+        {showSuccess ? "Added!" : submitting ? "Adding..." : quantity > 1 ? `Add ${quantity} to Order` : "Add to Order"}
       </button>
     </form>
   );
