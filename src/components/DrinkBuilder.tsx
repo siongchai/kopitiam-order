@@ -199,32 +199,29 @@ export default function DrinkBuilder({
         />
       </div>
 
-      {/* Preview */}
-      <div className="bg-[#F5F0EB] rounded-2xl p-4 text-center">
-        <p className="text-[11px] text-[#8B7355] uppercase tracking-wider font-medium mb-1">
-          Your Order
-        </p>
-        <p className="font-bold text-[#4A3425] text-xl">{previewName}</p>
-      </div>
-
-      {/* Quantity */}
-      <div>
-        <label className="section-label">Quantity</label>
-        <div className="flex items-center gap-4">
+      {/* Preview + Quantity */}
+      <div className="bg-[#F5F0EB] rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] text-[#8B7355] uppercase tracking-wider font-medium mb-1">
+            Your Order
+          </p>
+          <p className="font-bold text-[#4A3425] text-xl truncate">{previewName}</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             disabled={disabled || quantity <= 1}
-            className="w-10 h-10 rounded-full bg-[#F5F0EB] text-[#6B4C35] font-bold text-lg hover:bg-[#EDE5DC] active:scale-95 transition-all disabled:opacity-30"
+            className="w-8 h-8 rounded-full bg-white text-[#6B4C35] font-bold text-lg hover:bg-gray-50 active:scale-95 transition-all disabled:opacity-30"
           >
             −
           </button>
-          <span className="text-xl font-bold text-[#4A3425] w-8 text-center">{quantity}</span>
+          <span className="text-lg font-bold text-[#4A3425] w-6 text-center">{quantity}</span>
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.min(10, q + 1))}
             disabled={disabled || quantity >= 10}
-            className="w-10 h-10 rounded-full bg-[#F5F0EB] text-[#6B4C35] font-bold text-lg hover:bg-[#EDE5DC] active:scale-95 transition-all disabled:opacity-30"
+            className="w-8 h-8 rounded-full bg-white text-[#6B4C35] font-bold text-lg hover:bg-gray-50 active:scale-95 transition-all disabled:opacity-30"
           >
             +
           </button>
