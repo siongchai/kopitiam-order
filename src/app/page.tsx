@@ -18,6 +18,7 @@ export default function Home() {
   const [label, setLabel] = useState("");
   const [stallName, setStallName] = useState("");
   const [creating, setCreating] = useState(false);
+  const [quickCreating, setQuickCreating] = useState(false);
   const [pastOrders, setPastOrders] = useState<PastOrder[]>([]);
 
   useEffect(() => {
@@ -95,6 +96,35 @@ export default function Home() {
             {creating ? "Creating..." : "Start Order"}
           </button>
         </form>
+
+        {/* Quick Order */}
+        <div className="mt-4">
+          <button
+            onClick={async () => {
+              if (quickCreating) return;
+              setQuickCreating(true);
+              try {
+                const now = new Date();
+                const quickLabel = `Quick Order ${now.toLocaleDateString("en-SG", { day: "numeric", month: "short" })} ${now.toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit", hour12: true })}`;
+                const res = await fetch("/api/orders", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ label: quickLabel, stallName: "" }),
+                });
+                if (res.ok) {
+                  const order = await res.json();
+                  router.push(`/order/${order.id}`);
+                }
+              } finally {
+                setQuickCreating(false);
+              }
+            }}
+            disabled={quickCreating}
+            className="w-full py-4 bg-[#F5F0EB] text-[#6B4C35] font-semibold rounded-2xl hover:bg-[#EDE5DC] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {quickCreating ? "Creating..." : "⚡ Quick Order"}
+          </button>
+        </div>
 
         {/* Past Orders */}
         {pastOrders.length > 0 && (

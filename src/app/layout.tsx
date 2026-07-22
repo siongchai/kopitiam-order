@@ -28,6 +28,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen bg-[#FEFCF9] antialiased touch-manipulation">
         <div className="safe-area-inset">{children}</div>
+        <span className="fixed bottom-1 right-2 text-[10px] text-[#8B7355]/40 pointer-events-none">
+          v1.1.0
+        </span>
       </body>
     </html>
   );
